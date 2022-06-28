@@ -1,0 +1,34 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+    name: deploy-service
+roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: deploy-service
+subjects:
+    - kind: ServiceAccount
+      name: deploy-service
+      namespace: ml-demo
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+    name: deploy-service
+    namespace: ml-demo
+automountServiceAccountToken: True
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+    name: deploy-service
+rules:
+    - apiGroups: ["apps"]
+      resources: ["deployments"]
+      verbs: ["create", "get", "delete", "list", "update"]
+    - apiGroups: ["networking.k8s.io"]
+      resources: ["ingresses"]
+      verbs: ["create", "get", "delete", "list", "update"]
+    - apiGroups: [""]
+      resources: ["services", "namespaces"]
+      verbs: ["create", "get", "delete", "list", "patch"]

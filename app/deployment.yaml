@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:
+  namespace: ml-demo
+  labels:
+    app: xgboost-service-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xgboost-service-demo
+  template:
+    metadata:
+      labels:
+        app: xgboost-service-demo
+    spec:
+      containers:
+      - name: test-deploy-server
+        image: test-deploy-server:6
+        ports:
+          - containerPort: 8080
+        env:
+          - name: model_name
+            value: s

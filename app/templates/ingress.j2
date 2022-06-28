@@ -1,0 +1,38 @@
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "Ingress",
+  "metadata": {
+    "name": "{{model_name}}",
+    "namespace": "ml-demo",
+    "labels": {
+      "app": "{{model_name}}"
+    },
+    "annotations": {
+      "kubernetes.io/ingress.class": "nginx",
+      "nginx.ingress.kubernetes.io/enable-cors": "true"
+    }
+  },
+  "spec": {
+    "rules": [
+      {
+        "host": "dev.xgboostdemo.com",
+        "http": {
+          "paths": [
+            {
+              "backend": {
+                "service": {
+                  "name": "{{model_name}}",
+                  "port": {
+                    "number": 80
+                  }
+                }
+              },
+              "path": "/sampling-service/{{model_name}}",
+              "pathType": "Prefix"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

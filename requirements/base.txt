@@ -1,0 +1,11 @@
+requests
+jinja2
+fastapi
+uvicorn
+uvicorn[standard]
+starlette_prometheus
+pytest
+prometheus_client
+xgboost
+scikit-learn
+numpy
