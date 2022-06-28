@@ -11,7 +11,7 @@ class DeploymentService:
     def deploy_service(modelname):
         try:
             template = env.get_template('deployment.j2')
-            dep = template.render(model_name=modelname, image_name='xgboost-server',
+            dep = template.render(model_name=modelname, image_name='xgboost-base-image',
                               image_version='1')
             res = req.post("https://kubernetes.default.svc/apis/apps/v1/namespaces/ml-demo/deployments", json=json.loads(dep),
                           headers={"Authorization": get_token()}, verify=False)
