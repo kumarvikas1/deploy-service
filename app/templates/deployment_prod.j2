@@ -1,0 +1,74 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "{{model_name}}",
+    "namespace": "ml-demo",
+    "labels": {
+      "app": "{{model_name}}"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app": "{{model_name}}"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "{{model_name}}"
+        }
+      },
+      "spec": {
+      "volumes": [
+          {
+            "name": "model-location",
+            "emptyDir": {}
+          }
+        ],
+        "initContainers": [
+          {
+            "name": "storage-initializer",
+            "image": "gcr.io/kfserving/storage-initializer:v0.5.1",
+            "args": [
+              "s3://{{ model-url }}",
+              "/mnt/models"
+            ],
+            "volumeMounts": [
+              {
+                "name": "model-location",
+                "mountPath": "/mnt/models"
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "name": "{{image_name}}",
+            "image": "{{image_name}}:{{image_version}}",
+            "ports": [
+              {
+                "containerPort": 8080
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "model-location",
+                "readOnly": true,
+                "mountPath": "/mnt/models"
+              }
+            ],
+            "env": [
+              {
+                "name": "model_name",
+                "value": "{{model_name}}"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
